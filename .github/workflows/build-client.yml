@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout client repo
-        uses: actions/checkout@latest
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@latest
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
