@@ -32,7 +32,12 @@ The app is also built to communicate with a backend server via a REST API. The s
    # note: ensure the server is running first
    npm run dev
    ```
+### Demo Account
+I have also setup a demo account. It is created when the database is setup on the server. This can give you a sense of how the app is intended to work and look with actual data.
 
+* E-mail: demo@user.com
+
+* Password: 123
 
 ## Project Structure
 
