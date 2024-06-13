@@ -86,13 +86,29 @@ The app features end-to-end testing using Cypress, focusing on the core function
     npx cypress run
     ```
 
+> Note: These tests also run as part of the CI.
+
 ## Github Actions
 
-The app features a GitHub workflow that triggers when there is a commit to the main branch of the GitHub repository. This workflow builds the project and stores the build in the dist folder. This helps ensure that every change is automatically built. The workflow includes the following steps:
+1. Build Static files
 
-1. Checkout: The code is checked out from the repository.
-2. Install Dependencies: All necessary dependencies are installed using npm install.
-3. Build: The project is built using npm run build, and the output is stored in the dist folder.
+   The app features a GitHub workflow that triggers when there is a commit to the main branch of the GitHub repository. This workflow builds the project and stores the build in the dist folder. This helps ensure that every change is automatically built. The workflow includes the following steps:
+
+   1. Checkout: The code is checked out from the repository.
+   2. Install Dependencies: All necessary dependencies are installed using npm install.
+   3. Build: The project is built using npm run build, and the output is stored in the dist folder.
+
+2. End-to-End Testing with Cypress
+
+   The app also features a GitHub workflow that runs the cypress end-to-end tests to ensure the app work as expect with code changes. This job is triggered on commits to the main branch and pull requests to the main branch. The workflow includes the following steps:
+
+   1. Start Services: Creates a PostgreSQL service container. The workflow waits for the PostgreSQL service to be ready.
+   2. Checkout Frontend and Backend Code: The code for both frontend and backend is checked out from their respective repositories.
+   3. Set Up Node.js: Node.js is set up for the server.
+   4. Install Dependencies: The frontend and backend dependencies are installed using npm install.
+   5. Start Server: The server is started. The workflow waits until the server is running.
+   6. Start Frontend: The frontend is started. The workflow waits until the frontend is running.
+   7. Run Cypress Tests: Cypress end-to-end tests are executed to verify that the app runs as expected.
 
 
 ## Approaches and Reasoning

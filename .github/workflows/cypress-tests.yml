@@ -1,5 +1,7 @@
-name: Cypress Tests
+# Runs the cypress e2e test
+name: Run Cypress e2e Tests
 
+# Runs its when changes are pushed to mai9n and when there is a pull request to main
 on:
   push:
     branches:
@@ -8,10 +10,12 @@ on:
     branches:
       - main
 
+# Defines the jobs in the workflow
 jobs:
-  test:
+  cypress-tests:
     runs-on: ubuntu-latest
 
+    # A service for a Docker Hub postgres image.
     services:
       postgres:
         image: postgres
@@ -19,6 +23,7 @@ jobs:
           POSTGRES_DB: workout_db
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: admin123
+        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -28,41 +33,52 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Checkout frontend repo code
+      # Downloads a copy of the repo before running CI tests
+      - name: Checkout The App Repo Code
         uses: actions/checkout@v4
 
+      # Downloads a copy of the server repo before running CI tests
       - name: Checkout server repo code
         uses: actions/checkout@v4
         with:
           repository: UniSunshineCoast/csc301-24-assignment-3-secondary-Ricardo-USC
+          # I needed to generate a token to access another repo
           token: ${{ secrets.REPO_TOKEN }}
           path: server
-
-      - name: Set up Node.js
+      
+      # Set-up node for the server
+      - name: Set-up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Install frontend dependencies
+      
+      # Performs a clean install of the dependencies in the `package.json` file for the app
+      - name: Install Apps Dependencies
         run: npm install
-
-      - name: Install server dependencies
+      
+      # Performs a clean install of the dependencies in the `package.json` file for the server
+      - name: Install Server Dependencies
         run: |
               cd server
               npm install
-
-      - name: Start the server
+      
+      # Starts the server which creates the tables needed for the app
+      # This also waits until the server is up and running
+      - name: Start The Server
         run: |
           cd server
           npm start &
           npx wait-on http://localhost:3030
-
-      - name: Start frontend server
+      
+      # Starts the client (the app)
+      # This waits until the client is up and running
+      - name: Start React + Vite App
         run: |
           npm run dev &
           npx wait-on http://localhost:5173
-
-      - name: Run Cypress e2e tests
+      
+      # Finally this runs the cypress e2e tests
+      - name: Run Cypress e2e Tests
         uses: cypress-io/github-action@v2
         with:
           config-file: cypress.config.js
