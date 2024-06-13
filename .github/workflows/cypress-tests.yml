@@ -79,6 +79,6 @@ jobs:
       
       # Finally this runs the cypress e2e tests
       - name: Run Cypress e2e Tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v6
         with:
           config-file: cypress.config.js
