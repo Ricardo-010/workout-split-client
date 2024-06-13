@@ -12,17 +12,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres
-        restart: always
-        ports:
-          - "5432:5432"
-        environment:
-          POSTGRES_DB: workout_db
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: admin123
-
     steps:
       - name: Checkout frontend code
         uses: actions/checkout@v4
@@ -31,8 +20,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: UniSunshineCoast/csc301-24-assignment-3-secondary-Ricardo-USC
-          token: ${{ secrets.REPO_TOKEN}}
-          path: server
+          token: ${{ secrets.REPO_TOKEN }}
+          path: backend
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -43,19 +32,22 @@ jobs:
         run: npm install
 
       - name: Install backend dependencies
-        run: |
-          cd server
-          npm install
+        run: npm install
         working-directory: ./backend
 
-      - name: Start the server
+      - name: Start services using Docker Compose
         run: |
-          cd server
-          npm start:server &
-          npx wait-on http://localhost:3030
-        working-directory: ./backend
+          cd backend
+          docker-compose up -d
+        # env:
+        #   POSTGRES_DB: workout_db
+        #   POSTGRES_USER: admin
+        #   POSTGRES_PASSWORD: admin123
 
-      - name: Start frontend
+      - name: Wait for backend to be ready
+        run: npx wait-on http://localhost:3030
+
+      - name: Start frontend server
         run: |
           npm run dev &
           npx wait-on http://localhost:5173
@@ -63,6 +55,7 @@ jobs:
       - name: Run Cypress e2e tests
         uses: cypress-io/github-action@v2
         with:
-          start: npm cypress run
+          start: npm run dev
           wait-on: http://localhost:5173
+          wait-on-timeout: 120
           config-file: cypress.config.js
