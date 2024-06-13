@@ -1,0 +1,68 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        restart: always
+        ports:
+          - "5432:5432"
+        environment:
+          POSTGRES_DB: workout_db
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin123
+
+    steps:
+      - name: Checkout frontend code
+        uses: actions/checkout@v4
+
+      - name: Checkout backend code
+        uses: actions/checkout@v4
+        with:
+          repository: UniSunshineCoast/csc301-24-assignment-3-secondary-Ricardo-USC
+          token: ${{ secrets.REPO_TOKEN}}
+          path: server
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Install backend dependencies
+        run: |
+          cd server
+          npm install
+        working-directory: ./backend
+
+      - name: Start the server
+        run: |
+          cd server
+          npm start:server &
+          npx wait-on http://localhost:3030
+        working-directory: ./backend
+
+      - name: Start frontend
+        run: |
+          npm run dev &
+          npx wait-on http://localhost:5173
+
+      - name: Run Cypress e2e tests
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm cypress run
+          wait-on: http://localhost:5173
+          config-file: cypress.config.js
