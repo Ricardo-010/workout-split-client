@@ -4,8 +4,8 @@ describe("Main functionality tests (CRUD operations):", () => {
   before(() => {
     cy.visit("/register");
 
-    cy.get('input[name="email"]').type("demo@user.com");
-    cy.get('input[name="confirm-email"]').type("demo@user.com");
+    cy.get('input[name="email"]').type("demo.user@gmail.com");
+    cy.get('input[name="confirm-email"]').type("demo.user@gmail.com");
     cy.get('input[name="password"]').type("123");
     cy.get('input[name="confirm-password"]').type("123");
     cy.get('button[type="submit"]').click();
@@ -18,7 +18,7 @@ describe("Main functionality tests (CRUD operations):", () => {
     // Login the user.
     cy.visit("/login");
 
-    cy.get('input[name="email"]').type("demo@user.com");
+    cy.get('input[name="email"]').type("demo.user@gmail.com");
     cy.get('input[name="password"]').type("123");
     cy.get('button[type="submit"]').click();
     cy.url().should("include", "/home");
@@ -28,7 +28,7 @@ describe("Main functionality tests (CRUD operations):", () => {
     cy.get("p").contains("Settings").click();
     cy.get('button[name="delete-account"]').click();
 
-    cy.get('input[name="email"]').type("demo@user.com");
+    cy.get('input[name="email"]').type("demo.user@gmail.com");
     cy.get('input[name="password"]').type("123");
     cy.get('button[type="submit"]').click();
 
@@ -39,7 +39,7 @@ describe("Main functionality tests (CRUD operations):", () => {
   beforeEach(() => {
     cy.visit("/login");
 
-    cy.get('input[name="email"]').type("demo@user.com");
+    cy.get('input[name="email"]').type("demo.user@gmail.com");
     cy.get('input[name="password"]').type("123");
     cy.get('button[type="submit"]').click();
 
