@@ -43,7 +43,7 @@ jobs:
       - name: Start the server
         run: |
           cd server
-          npm start:server &
+          npm start &
           npx wait-on http://localhost:3030
 
       - name: Start frontend server
