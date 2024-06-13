@@ -16,12 +16,12 @@ jobs:
       - name: Checkout frontend code
         uses: actions/checkout@v4
 
-      - name: Checkout backend code
+      - name: Checkout server code
         uses: actions/checkout@v4
         with:
           repository: UniSunshineCoast/csc301-24-assignment-3-secondary-Ricardo-USC
           token: ${{ secrets.REPO_TOKEN }}
-          path: backend
+          path: server
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -31,18 +31,18 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
-      - name: Install backend dependencies
+      - name: Install server dependencies
         run: npm install
-        working-directory: ./backend
+        working-directory: ./server
 
       - name: Start db using Docker Compose
         run: |
-          cd backend
+          cd server
           docker-compose up -d
 
-      - name: Start the backend server
+      - name: Start the server
         run: |
-          cd backend
+          cd server
           npm start:server &
           npx wait-on http://localhost:3030
 
