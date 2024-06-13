@@ -65,7 +65,4 @@ jobs:
       - name: Run Cypress e2e tests
         uses: cypress-io/github-action@v2
         with:
-          start: npm run dev
-          wait-on: http://localhost:5173
-          wait-on-timeout: 120
           config-file: cypress.config.js
