@@ -35,17 +35,16 @@ jobs:
         run: npm install
         working-directory: ./backend
 
-      - name: Start services using Docker Compose
+      - name: Start db using Docker Compose
         run: |
           cd backend
           docker-compose up -d
-        # env:
-        #   POSTGRES_DB: workout_db
-        #   POSTGRES_USER: admin
-        #   POSTGRES_PASSWORD: admin123
 
-      - name: Wait for backend to be ready
-        run: npx wait-on http://localhost:3030
+      - name: Start the backend server
+        run: |
+          cd backend
+          npm start:server &
+          npx wait-on http://localhost:3030
 
       - name: Start frontend server
         run: |
